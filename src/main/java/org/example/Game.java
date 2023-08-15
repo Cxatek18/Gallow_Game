@@ -1,9 +1,7 @@
 package org.example;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 
 public class Game {
@@ -16,7 +14,7 @@ public class Game {
         this.gallow = new Gallows();
         this.numberOfErrors = 0;
         this.listEncryptingWord = this.gallow.getHiddenWord().split(" ");
-        System.out.println("Вопрос: %s".formatted(this.gallow.getQuestions()));
+        System.out.println("Вопрос: %s".formatted(this.gallow.getWordDefinition()));
     }
 
     public void stepGame(char word){
@@ -33,8 +31,8 @@ public class Game {
         return this.MAX_COUNT_ERRORS;
     }
 
-    public String getHiddenWord(){
-        return this.gallow.getWord();
+    public String declassificationOfTheWord(){
+        return this.gallow.getRandomWord();
     }
 
     public int getNumberOfErrors(){
@@ -49,7 +47,7 @@ public class Game {
     }
 
     private boolean checkingLetterInHiddenWord(char word){
-        String hiddenWord = this.gallow.getWord();
+        String hiddenWord = this.gallow.getRandomWord();
         if(hiddenWord.contains(Character.toString(word))){
             for(int i = 0; i < hiddenWord.length(); i++){
                 if(hiddenWord.charAt(i) == word){
@@ -68,7 +66,11 @@ public class Game {
 
     private void drawingGallows(){
         try (BufferedReader reader = new BufferedReader(
-                new FileReader("%s.txt".formatted(this.numberOfErrors))
+                new FileReader(new File(
+                        getClass()
+                                .getResource("/drawing_templates/%s.txt".formatted(this.numberOfErrors))
+                                .toURI()
+                ))
         )){
             String line;
             while((line=reader.readLine()) != null){
@@ -76,7 +78,7 @@ public class Game {
             }
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             throw new RuntimeException(e);
         }
     }

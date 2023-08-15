@@ -24,6 +24,6 @@ public class GallowsTest {
             game.stepGame(letter);
         }
         System.out.println("Загаданное слово: ");
-        System.out.println(game.getHiddenWord());
+        System.out.println(game.declassificationOfTheWord());
     }
 }
